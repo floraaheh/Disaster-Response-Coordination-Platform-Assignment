@@ -1,0 +1,143 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Disaster Response Dashboard</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; }
+    h2 { margin-top: 30px; }
+    input, textarea, button { display: block; margin: 10px 0; width: 100%; }
+    .box { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    .tag { display: inline-block; background: #eee; padding: 2px 6px; margin-right: 4px; }
+  </style>
+</head>
+<body>
+
+  <h1>🌍 Disaster Response Coordination</h1>
+
+  <h2>Create Disaster</h2>
+  <form id="createDisasterForm">
+    <input name="title" placeholder="Title" required />
+    <input name="location_name" placeholder="Location Name (e.g., Manhattan, NYC)" required />
+    <textarea name="description" placeholder="Description" required></textarea>
+    <input name="tags" placeholder="Tags (comma-separated, e.g., flood,urgent)" required />
+    <button type="submit">Create Disaster</button>
+  </form>
+
+  <h2>Submit Report</h2>
+  <form id="submitReportForm">
+    <input name="disaster_id" placeholder="Disaster ID" required />
+    <input name="user_id" placeholder="User ID" required />
+    <textarea name="content" placeholder="Content" required></textarea>
+    <input name="image_url" placeholder="Image URL" />
+    <button type="submit">Submit Report</button>
+  </form>
+
+  <h2>Get Disaster Details</h2>
+  <input id="fetchDisasterId" placeholder="Disaster ID" />
+  <button onclick="fetchDetails()">Fetch All Details</button>
+
+  <div id="output"></div>
+
+  <script>
+    const baseURL = "";
+
+    document.getElementById('createDisasterForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        title: form.title.value,
+        location_name: form.location_name.value,
+        description: form.description.value,
+        tags: form.tags.value.split(',').map(tag => tag.trim()),
+        owner_id: "netrunnerX"
+      };
+
+      const res = await fetch(`${baseURL}/disasters`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      alert("Disaster Created. ID: " + result[0]?.id);
+    };
+
+    document.getElementById('submitReportForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        disaster_id: form.disaster_id.value,
+        user_id: form.user_id.value,
+        content: form.content.value,
+        image_url: form.image_url.value
+      };
+
+      const res = await fetch(`${baseURL}/reports`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      alert("Report submitted");
+    };
+
+    async function fetchDetails() {
+      const id = document.getElementById('fetchDisasterId').value;
+      const output = document.getElementById('output');
+      output.innerHTML = '<p>Loading...</p>';
+
+      const [disRes, socRes, repRes, resRes] = await Promise.all([
+        fetch(`${baseURL}/disasters/${id}`),
+        fetch(`${baseURL}/social-media/${id}`),
+        fetch(`${baseURL}/reports/${id}`),
+        fetch(`${baseURL}/resources?lat=40.7128&lon=-74.0060`)
+      ]);
+
+      const disaster = await disRes.json();
+      const social = await socRes.json();
+      const reports = await repRes.json();
+      const resources = await resRes.json();
+
+      output.innerHTML = `
+        <h3>Disaster Info</h3>
+        <div class="box">${JSON.stringify(disaster)}</div>
+
+        <h3>Social Media Reports</h3>
+        ${social.map(p => `<div class="box">@${p.user}: ${p.post}</div>`).join('')}
+
+        <h3>Submitted Reports</h3>
+        ${reports.map(r => `<div class="box">${r.content} <br><small>By ${r.user_id}</small></div>`).join('')}
+
+        <h3>Nearby Resources</h3>
+        ${resources.map(r => `<div class="box">${r.name} - ${r.type}</div>`).join('')}
+      `;
+    }
+
+    // Real-time updates via WebSocket
+    const socket = io();
+    socket.on('social_media_updated', data => {
+      alert('New social media data received!');
+    });
+    socket.on('resources_updated', data => {
+      alert('Nearby resources updated!');
+    });
+  </script>
+
+  <script src="/socket.io/socket.io.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Disaster Response Platform" />
+    <title>Disaster Response</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
