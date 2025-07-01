@@ -16,8 +16,6 @@ A full-stack disaster response platform built with React, Node.js, Express, and 
 - **Database**: Supabase (PostgreSQL with PostGIS)
 - **APIs**: Google Gemini, Google Maps/Mapbox, Social Media APIs
 
-## Setup Instructions
-[Add your setup instructions here]
 
 ## Live Demo
 - Frontend: (https://floraaheh-disaster-management.netlify.app/)
